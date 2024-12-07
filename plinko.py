@@ -37,3 +37,9 @@ def create_pins():
 
 if __name__ == '__main__':
     create_pins()
+    running = True
+    while running:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
