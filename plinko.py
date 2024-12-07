@@ -1,50 +1,51 @@
 import pygame
 import sys
-import io
 import random
 
 pygame.init()
 
-# Resolution
-width, height = 1280, 720
-ratio = width / 1280
-screen = pygame.display.set_mode((width, height))
-pygame.display.set_caption("Plinko")
-
-# Pins
-pins = []
-pin_radius = int(5 * ratio)
-pin_spacing = int(40 * ratio)
-pin_rows = 16
-pin_start = 50
-
-# Balls
-ball_radius = int(9 * ratio) 
-balls = []
-del_balls_x = []
-fall_speed_increment = 0.6 * ratio
-balls_at_once = 1
+# Screen settings
+WIDTH, HEIGHT = 1280, 720
+RATIO = WIDTH / 1280
+screen = pygame.display.set_mode((WIDTH, HEIGHT))
+pygame.display.set_caption("Plinko Game")
 
 # Colors
-background = (19, 5, 48)
-red = (250, 1, 62)
-black = (0, 0, 0)
-white = (255, 255, 255)
-green = (34, 200, 34)
+BACKGROUND = (15, 33, 47)
+WHITE = (255, 255, 255)
+GREEN = (34, 200, 34)
+RED = (250, 1, 62)
+
+# Pin settings
+PIN_RADIUS = int(5 * RATIO)
+PIN_SPACING = int(40 * RATIO)
+PIN_ROWS = 16
+PIN_START = 50
+pins = []
+
+# Bin settings
+BIN_COUNT = 10
+BIN_HEIGHT = int(60 * RATIO)
+BIN_WIDTH = WIDTH // BIN_COUNT
+BIN_LABELS = [round(i * 0.2, 1) for i in range(BIN_COUNT)]
 
 def create_pins():
     pins.clear()
-    offset = pin_spacing // 2
-    for row in range(1, pin_rows + 1):
-        row_offset = offset if row % 2 == 0 else 0
-        for col in range(-(row// 2) - 1, (row - 1) // 2 + 2):
-            x = width // 2 + col * pin_spacing + row_offset
-            y = row * pin_spacing + pin_start
+    for row in range(1, PIN_ROWS + 1):
+        row_offset = PIN_SPACING // 2 if row % 2 == 0 else 0
+        for col in range(-(row // 2) - 1, (row - 1) // 2 + 2):
+            x = WIDTH // 2 + col * PIN_SPACING + row_offset
+            y = row * PIN_SPACING + PIN_START
             pins.append((x, y))
 
-create_pins()
+def draw_pins():
+    for pin in pins:
+        pygame.draw.circle(screen, WHITE, pin, PIN_RADIUS)
 
-if __name__ == '__main__':
+#def draw_bins(): 
+
+def main():
+    create_pins()
     running = True
     while running:
         for event in pygame.event.get():
@@ -52,9 +53,12 @@ if __name__ == '__main__':
                 pygame.quit()
                 sys.exit()
 
-        screen.fill(black)
+        screen.fill(BACKGROUND)
 
-        for pin in pins:
-            pygame.draw.circle(screen, white, pin, pin_radius)
+        draw_pins()
+#        draw_bins()
 
         pygame.display.flip()
+
+if __name__ == "__main__":
+    main()
