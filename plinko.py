@@ -16,7 +16,7 @@ pins = []
 pin_radius = int(5 * ratio)
 pin_spacing = int(40 * ratio)
 pin_rows = 16
-pin_start = 0
+pin_start = 50
 
 # Balls
 ball_radius = int(9 * ratio) 
@@ -24,6 +24,13 @@ balls = []
 del_balls_x = []
 fall_speed_increment = 0.6 * ratio
 balls_at_once = 1
+
+# Colors
+background = (19, 5, 48)
+red = (250, 1, 62)
+black = (0, 0, 0)
+white = (255, 255, 255)
+green = (34, 200, 34)
 
 def create_pins():
     pins.clear()
@@ -35,11 +42,19 @@ def create_pins():
             y = row * pin_spacing + pin_start
             pins.append((x, y))
 
+create_pins()
+
 if __name__ == '__main__':
-    create_pins()
     running = True
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
+
+        screen.fill(black)
+
+        for pin in pins:
+            pygame.draw.circle(screen, white, pin, pin_radius)
+
+        pygame.display.flip()
