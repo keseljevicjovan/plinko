@@ -5,7 +5,7 @@ import random
 pygame.init()
 
 # Screen settings
-WIDTH, HEIGHT = 1280, 720
+WIDTH, HEIGHT = 1080, 720
 RATIO = WIDTH / 1280
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Plinko Game")
@@ -25,11 +25,11 @@ PIN_START = 50
 pins = []
 
 # Bin settings
-BIN_COUNT = 10
+BIN_COUNT = PIN_ROWS + 1
 BIN_HEIGHT = int(60 * RATIO)
 BIN_WIDTH = WIDTH // BIN_COUNT
 BIN_LABELS = [round(i * 0.2, 1) for i in range(BIN_COUNT)]
-BIN_TEXTS = ['1000', '130', '26x', '9x', '4x', '2x', '0.2x', '0.2x', '0.2x','0.2x','0.2x','2x','4x','9x','26x', '130', '1000']
+BIN_TEXTS = ['1000', '130x', '26x', '9x', '4x', '2x', '0.2x', '0.2x', '0.2x','0.2x','0.2x','2x','4x','9x','26x', '130x', '1000']
 hit_bins = []  # List to store hit bins
 
 # Fonts for the headers
