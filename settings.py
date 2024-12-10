@@ -1,0 +1,9 @@
+# Screen settings
+WIDTH, HEIGHT = 1800, 1000
+RATIO = WIDTH / 1280
+BACKGROUND = (15, 33, 47)
+
+# Pin settings
+PIN_ROWS = 16
+PIN_SPACING = int(40 * RATIO)
+PIN_START = 50
