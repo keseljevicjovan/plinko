@@ -5,9 +5,9 @@ from utils import create_rgb_gradient, draw_rounded_rect
 # Bin settings
 BIN_COUNT = PIN_ROWS + 1
 BIN_HEIGHT = int(60 * RATIO)
-BIN_WIDTH = WIDTH // BIN_COUNT
+BIN_WIDTH = WIDTH // (BIN_COUNT+2)
 BIN_LABELS = [round(i * 0.2, 1) for i in range(BIN_COUNT)]
-BIN_TEXTS = ['1000', '130x', '26x', '9x', '4x', '2x', '0.2x', '0.2x', '0.2x', '0.2x', '0.2x', '2x', '4x', '9x', '26x', '130x', '1000']
+BIN_TEXTS = ['1000', '130', '26x', '9x', '4x', '2x', '0.2x', '0.2x', '0.2x', '0.2x', '0.2x', '2x', '4x', '9x', '26x', '130', '1000']
 hit_bins = []
 
 # Gradient
@@ -23,7 +23,7 @@ bin_colors = left_gradient + right_gradient
 def create_bin_text_surfaces():
     bin_text_surfaces = []
     for text in BIN_TEXTS:
-        rendered_text = pygame.font.SysFont('Gill Sans', int(14 * RATIO), True).render(text, True, (0, 0, 0))
+        rendered_text = pygame.font.SysFont('Gill Sans', int(12 * RATIO), True).render(text, True, (0, 0, 0))
         bin_text_surfaces.append(rendered_text)
     return bin_text_surfaces
 
@@ -31,6 +31,7 @@ def render_bins(screen):
     global hit_bins
     bin_text_surfaces = create_bin_text_surfaces()
     click_offset = 4 * RATIO
+    shadow_offset = int(4 * RATIO)
     bin_start_offset = WIDTH // 2 - (PIN_ROWS // 2 + 0.5) * PIN_SPACING 
     base_y = PIN_ROWS * PIN_SPACING + 50 + PIN_SPACING // 2 
     bin_width = BIN_WIDTH // 2 
@@ -46,6 +47,9 @@ def render_bins(screen):
         base_x = bin_start_offset - bin_width // 2 + offset_x
         bin_color = bin_colors[bin]
 
+        shadow_color = [max(0, c - 100) for c in bin_color]
+        shadow_rect = pygame.Rect(base_x, base_y + shadow_offset, bin_width, bin_width+shadow_offset)
+
         if animate:
             light_rect_right = pygame.Rect(base_x, base_y + click_offset, bin_width, bin_width)
             text_rect = bin_text_surface.get_rect(center=(base_x + bin_width // 2, base_y + bin_width // 2 + click_offset))
@@ -54,10 +58,12 @@ def render_bins(screen):
             dark_rect_right = pygame.Rect(base_x, base_y + click_offset, bin_width, bin_width)
             light_rect_right = pygame.Rect(base_x, base_y, bin_width, bin_width)
             text_rect = bin_text_surface.get_rect(center=(base_x + bin_width // 2, base_y + bin_width // 2))
+            draw_rounded_rect(screen, shadow_rect, shadow_color, int(4 * RATIO) + (RATIO > 1))
             draw_rounded_rect(screen, dark_rect_right, bin_color, int(4 * RATIO) + (RATIO > 1))
 
         draw_rounded_rect(screen, light_rect_right, bin_color, int(4 * RATIO) + (RATIO > 1))
         screen.blit(bin_text_surface, text_rect)
+
 
 def draw_bins(screen):
     render_bins(screen)
