@@ -36,8 +36,8 @@ Follow these steps to get the game up and running on your system:
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/your-username/plinko-game.git
-   cd plinko-game
+   git clone https://github.com/keseljevicjovan/plinko.git
+   cd plinko
    ```
 
 2. **Install Pygame** (make sure Python is installed)
