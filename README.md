@@ -47,7 +47,7 @@ Follow these steps to get the game up and running on your system:
 
 3. **Run the game**
    ```bash
-   python plinko.py
+   python main.py
    ```
 
 ---
