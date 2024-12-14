@@ -1,7 +1,8 @@
 # Screen settings
-WIDTH, HEIGHT = 1800, 1000
+WIDTH, HEIGHT = 1200, 700
 RATIO = WIDTH / 1280
 BACKGROUND = (15, 33, 47)
+MAX_FPS = 60
 
 # Pin settings
 PIN_ROWS = 16
