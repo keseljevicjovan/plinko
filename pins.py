@@ -1,7 +1,6 @@
 import pygame
-from settings import WIDTH, RATIO
+from settings import WIDTH, RATIO, PIN_RADIUS
 
-PIN_RADIUS = int(5 * RATIO)
 PIN_SPACING = int(40 * RATIO)
 PIN_ROWS = 16
 PIN_START = 50
@@ -19,3 +18,4 @@ def create_pins():
 def draw_pins(screen):
     for pin in pins:
         pygame.draw.circle(screen, (255, 255, 255), pin, PIN_RADIUS)
+
