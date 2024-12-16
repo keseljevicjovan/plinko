@@ -5,11 +5,13 @@ from pins import pins
 
 BALL_RADIUS = int(7 * RATIO)
 BALL_COLOR = (255, 255, 255)
-BALL_GRAVITY = 0.3
-BALL_FRICTION = 1 
+BALL_GRAVITY = 0.2
+BALL_FRICTION = 0.98
 MAX_BALLS = 20
-BOUNCE_REDUCTION = 0.8 
-CENTER_PULL = 0.02
+BOUNCE_REDUCTION = 0.9
+MIN_BOUNCE_DISTANCE = 0.1
+MAX_BOUNCE_DISTANCE = 1.2
+CENTER_PULL = 0.8
 
 balls = []
 
@@ -34,13 +36,14 @@ class Ball:
 
         if self.x - BALL_RADIUS < 0 or self.x + BALL_RADIUS > WIDTH:
             self.vx = -self.vx * BOUNCE_REDUCTION
+        
         if self.y - BALL_RADIUS > HEIGHT:
             balls.remove(self)
 
     def collides_with_pin(self, pin):
         pin_x, pin_y = pin
         distance = ((self.x - pin_x) ** 2 + (self.y - pin_y) ** 2) ** 0.5
-        return distance < BALL_RADIUS + PIN_RADIUS  
+        return distance < BALL_RADIUS + PIN_RADIUS
 
     def handle_pin_collision(self, pin):
         pin_x, pin_y = pin
@@ -56,12 +59,42 @@ class Ball:
 
         dot_product = self.vx * nx + self.vy * ny
 
-        self.vx -= 2 * dot_product * nx * BOUNCE_REDUCTION
-        self.vy -= 2 * dot_product * ny * BOUNCE_REDUCTION
+        bounce_factor = 0.7
+        self.vx -= 2 * dot_product * nx * bounce_factor
+        self.vy -= 2 * dot_product * ny * bounce_factor
 
         overlap = (BALL_RADIUS + PIN_RADIUS) - distance
         self.x += nx * overlap * 0.5
         self.y += ny * overlap * 0.5
+
+        self.apply_horizontal_move()
+
+        self.vy = self.calculate_bounce_velocity(pin)
+
+    def apply_horizontal_move(self):
+        if random.random() < CENTER_PULL:
+            if self.x < WIDTH // 2:
+                self.vx += random.uniform(0, 1)
+            else:
+                self.vx -= random.uniform(0, 1)
+        else:
+            if random.random() < 0.5:
+                self.vx += random.uniform(0, 1)
+            else:
+                self.vx -= random.uniform(0, 1)
+
+    def calculate_bounce_velocity(self, pin):
+        pin_x, pin_y = pin
+        distance_to_pin = ((self.x - pin_x) ** 2 + (self.y - pin_y) ** 2) ** 0.5
+        
+        bounce_distance = random.uniform(MIN_BOUNCE_DISTANCE, MAX_BOUNCE_DISTANCE)
+
+        if distance_to_pin < bounce_distance:
+            bounce_height = distance_to_pin
+        else:
+            bounce_height = bounce_distance
+        
+        return -((2 * BALL_GRAVITY * bounce_height) ** 0.5)
 
     def render(self, screen):
         pygame.draw.circle(screen, BALL_COLOR, (int(self.x), int(self.y)), BALL_RADIUS)
