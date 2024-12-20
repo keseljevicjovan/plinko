@@ -9,3 +9,6 @@ PIN_ROWS = 16
 PIN_SPACING = int(40 * RATIO)
 PIN_START = 50
 PIN_RADIUS = int(5 * RATIO)  # Radius of the pins
+
+# Bin settings
+BIN_HEIGHT = 50

@@ -1,6 +1,6 @@
 import pygame
 import random
-from settings import WIDTH, HEIGHT, RATIO, PIN_SPACING, PIN_RADIUS
+from settings import WIDTH, HEIGHT, RATIO, PIN_SPACING, PIN_RADIUS, BIN_HEIGHT
 from pins import pins
 
 BALL_RADIUS = int(7 * RATIO)
@@ -26,19 +26,16 @@ class Ball:
         self.vy += BALL_GRAVITY
         self.x += self.vx
         self.y += self.vy
-
         for pin in pins:
             if self.collides_with_pin(pin):
                 self.handle_pin_collision(pin)
-
         self.vx *= BALL_FRICTION
         self.vy *= BALL_FRICTION
-
         if self.x - BALL_RADIUS < 0 or self.x + BALL_RADIUS > WIDTH:
             self.vx = -self.vx * BOUNCE_REDUCTION
-        
-        if self.y - BALL_RADIUS > HEIGHT:
-            balls.remove(self)
+        if self.y + BALL_RADIUS >= HEIGHT - BIN_HEIGHT:
+            if self in balls:
+                balls.remove(self)
 
     def collides_with_pin(self, pin):
         pin_x, pin_y = pin
@@ -50,25 +47,18 @@ class Ball:
         dx = self.x - pin_x
         dy = self.y - pin_y
         distance = (dx ** 2 + dy ** 2) ** 0.5
-
         if distance == 0:
             return
-
         nx = dx / distance
         ny = dy / distance
-
         dot_product = self.vx * nx + self.vy * ny
-
         bounce_factor = 0.7
         self.vx -= 2 * dot_product * nx * bounce_factor
         self.vy -= 2 * dot_product * ny * bounce_factor
-
         overlap = (BALL_RADIUS + PIN_RADIUS) - distance
         self.x += nx * overlap * 0.5
         self.y += ny * overlap * 0.5
-
         self.apply_horizontal_move()
-
         self.vy = self.calculate_bounce_velocity(pin)
 
     def apply_horizontal_move(self):
@@ -86,14 +76,11 @@ class Ball:
     def calculate_bounce_velocity(self, pin):
         pin_x, pin_y = pin
         distance_to_pin = ((self.x - pin_x) ** 2 + (self.y - pin_y) ** 2) ** 0.5
-        
         bounce_distance = random.uniform(MIN_BOUNCE_DISTANCE, MAX_BOUNCE_DISTANCE)
-
         if distance_to_pin < bounce_distance:
             bounce_height = distance_to_pin
         else:
             bounce_height = bounce_distance
-        
         return -((2 * BALL_GRAVITY * bounce_height) ** 0.5)
 
     def render(self, screen):
